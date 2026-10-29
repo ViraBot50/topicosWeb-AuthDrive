@@ -38,6 +38,7 @@ app.use(
 );
 
 
+
 app.use(
   session({
     name: 'prototipo.sid',
@@ -48,11 +49,13 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite:
+        process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     },
   })
 );
+
 
 
 app.use(passport.initialize());
@@ -170,7 +173,8 @@ app.post('/auth/logout', (req, res, next) => {
       res.clearCookie('prototipo.sid', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        sameSite:
+          process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       });
 
       return res.json({
