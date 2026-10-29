@@ -16,6 +16,8 @@ const PORT = Number(process.env.PORT) || 3000;
 const CLIENT_URL =
   process.env.CLIENT_URL || 'http://localhost:5173';
 
+app.set('trust proxy', 1);
+
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
@@ -45,7 +47,7 @@ app.use(
     rolling: true,
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     },
@@ -167,7 +169,7 @@ app.post('/auth/logout', (req, res, next) => {
 
       res.clearCookie('prototipo.sid', {
         httpOnly: true,
-        secure: false,
+        secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
       });
 
